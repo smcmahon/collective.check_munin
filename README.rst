@@ -2,6 +2,7 @@ Introduction
 ============
 
 This is a reimplementation of check_munin_rrd.pl in python.
+It is used as a Nagios plugin command to read data collected by a munin node from a munin server.
 
 It uses rrdtool directly via "rrdtool lastupdate".
 
