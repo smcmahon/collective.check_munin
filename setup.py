@@ -6,7 +6,7 @@ version = '1.0'
 setup(name='collective.check_munin',
       version=version,
       description="Nagios plugin to check munin via rrd",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
