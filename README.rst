@@ -13,4 +13,8 @@ Typical usage::
 
     check_munin -d dcn.org -H www.dcn.org -M df -o "_dev_*" -i _dev_shm -w 85 -c 95
 
-This reads the /var/lib/munin/dcn.org/www.dcn.org RRD files for the "df" module, including only RRD df files that match _dev_* and excluding _dev_shm.
+This reads the /var/lib/munin/dcn.org/www.dcn.org RRD files for the "df" module, including only RRD df files that match _dev_* and excluding _dev_shm::
+
+    /var/lib/munin/dcn.org/www.dcn.org-df-_dev_*-g.rrd
+
+ignoring /var/lib/munin/dcn.org/www.dcn.org-df-_dev_shm-g.rrd
