@@ -18,3 +18,7 @@ This reads the /var/lib/munin/dcn.org/www.dcn.org RRD files for the "df" module,
     /var/lib/munin/dcn.org/www.dcn.org-df-_dev_*-g.rrd
 
 ignoring /var/lib/munin/dcn.org/www.dcn.org-df-_dev_shm-g.rrd
+
+Sample output::
+
+    DF WARNING - /dev/sdi is 87.75 (greater than 85) | '/dev/sda1'=42.0611407378;85;95;0 '/dev/sdb'=31.7252599179;85;95;0 '/dev/sdh'=41.0162765108;85;95;0 '/dev/sdi'=87.7540702356;85;95;0 '/dev/sdj'=56.5373419066;85;95;0 '/dev/sdk'=54.4599777102;85;95;0
