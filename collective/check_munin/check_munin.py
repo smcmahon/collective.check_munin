@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""Hello world Nagios check."""
+""" Nagios plugin to check Munin data via rrdtool. """
 
 import argparse
 import glob
@@ -53,22 +53,6 @@ class RRD(nagiosplugin.Resource):
                         yield nagiosplugin.Metric(component, readRRDData(fn), min=0, context='munin')
 
 
-class RRDSummary(nagiosplugin.Summary):
-    """Status line conveying load information.
-
-    We specialize the `ok` method to present all three figures in one
-    handy tagline. In case of problems, the single-load texts from the
-    contexts work well.
-    """
-
-    def __init__(self, module=''):
-        self.module = module
-
-    def ok(self, results):
-        metrics = [r.metric for r in results]
-        return ', '.join(["%s %s" % (metric.name, metric.value) for metric in metrics])
-
-
 @nagiosplugin.guarded
 def main():
     argp = argparse.ArgumentParser(description=__doc__)
@@ -93,7 +77,6 @@ def main():
     check = nagiosplugin.Check(
         RRD(args),
         nagiosplugin.ScalarContext('munin', args.warning, args.critical),
-        # RRDSummary(module=args.module)
         )
     check.name = args.name or args.module
     check.main(verbose=args.verbose)
