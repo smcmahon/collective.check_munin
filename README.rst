@@ -1,14 +1,16 @@
 Introduction
 ============
 
-This is a reimplementation of `check_munin_rrd.pl <https://code.google.com/p/nagios-munin/>`_ in python.
-It is used as a Nagios plugin command to read data collected by a munin node from a munin server.
+This is a reimplementation of `check_munin_rrd.pl <https://code.google.com/p/nagios-munin/>`_ in Python.
+It is used as a Nagios plugin command to read data collected by a Munin node from a Munin server.
 
-It uses rrdtool directly via "rrdtool lastupdate".
+It uses `rrdtool <http://oss.oetiker.ch/rrdtool/>`_ directly via "rrdtool lastupdate".
+rrdtool is a dependency for Munin servers, so it should be reliably available.
 
 Installation is typical for a Python package; virtualenv is recommended.
 
 Run the check_munin script for options.
+Command-line options allow you to set domain, host, Munin-node plugin module, various include/exclude filters, and warning/critical ranges.
 
 Typical usage::
 
