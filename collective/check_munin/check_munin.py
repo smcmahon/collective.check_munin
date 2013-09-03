@@ -10,6 +10,7 @@ import os.path
 import re
 import subprocess
 import sys
+import time
 
 
 def readRRDData(fn):
@@ -18,7 +19,11 @@ def readRRDData(fn):
     except subprocess.CalledProcessError:
         print sys.exc_value
         sys.exit(3)
-    return float(s.split('\n')[2].split(':')[1].strip())
+    mtime, value = s.split('\n')[2].split(':')
+    if time.time() - float(mtime) > 600:
+        print "%s has stale data." % fn
+        sys.exit(3)
+    return float(value.strip())
 
 
 class RRD(nagiosplugin.Resource):
