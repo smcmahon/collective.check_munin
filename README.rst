@@ -11,6 +11,8 @@ Installation is typical for a Python package; virtualenv is recommended.
 
 Run the check_munin script for options.
 Command-line options allow you to set domain, host, Munin-node plugin module, various include/exclude filters, and warning/critical ranges.
+Options generally match check_munin_rrd.
+Differences: -o option values may be globs; warning/critical specifications may be ranges, e.g., "-w 0:85" for warn when outside 0-85 range.
 
 Typical usage::
 
