@@ -40,7 +40,7 @@ class RRD(nagiosplugin.Resource):
     def probe(self):
         myglob = os.path.join(
             self.rrdpath,
-            '%s-%s-%s-g.rrd' % (self.hostname, self.module, self.only)
+            '%s-%s-%s-*.rrd' % (self.hostname, self.module, self.only)
             )
         logging.info('checking %s', myglob)
         myfiles = glob.glob(myglob)
