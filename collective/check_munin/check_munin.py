@@ -35,7 +35,11 @@ class RRD(nagiosplugin.Resource):
         self.module = args.module
         self.only = args.only
         self.ignore = args.ignore
-        self.rrdpath = os.path.join(args.datadir, args.domain)
+        domain = args.domain
+        if not domain:
+           domain = re.sub(r'^[^\.]+\.', '', args.hostname)
+        self.rrdpath = os.path.join(args.datadir, domain)
+
 
     def probe(self):
         myglob = os.path.join(
@@ -66,7 +70,7 @@ class RRD(nagiosplugin.Resource):
 @nagiosplugin.guarded
 def main():
     argp = argparse.ArgumentParser(description=__doc__)
-    argp.add_argument('-d', '--domain', required=True, default='')
+    argp.add_argument('-d', '--domain', default='')
     argp.add_argument('-H', '--hostname', required=True, default='')
     argp.add_argument('-M', '--module', required=True, default='')
     argp.add_argument('-o', '--only', default='*',
