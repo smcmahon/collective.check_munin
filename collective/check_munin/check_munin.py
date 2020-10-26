@@ -17,11 +17,11 @@ def readRRDData(fn):
     try:
         s = subprocess.check_output(['rrdtool', 'lastupdate', fn, ])
     except subprocess.CalledProcessError:
-        print sys.exc_value
+        print(sys.exc_value)
         sys.exit(3)
-    mtime, value = s.split('\n')[2].split(':')
+    mtime, value = s.decode().split('\n')[2].split(':')
     if time.time() - float(mtime) > 600:
-        print "%s has stale data." % fn
+        print("%s has stale data." % fn)
         sys.exit(3)
     return float(value.strip())
 
