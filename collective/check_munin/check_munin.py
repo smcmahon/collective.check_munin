@@ -17,13 +17,16 @@ def readRRDData(fn):
     try:
         s = subprocess.check_output(['rrdtool', 'lastupdate', fn, ])
     except subprocess.CalledProcessError:
-        print sys.exc_value
+        print(sys.exc_value)
         sys.exit(3)
-    mtime, value = s.split('\n')[2].split(':')
+    mtime, value = s.decode().split('\n')[2].split(':')
     if time.time() - float(mtime) > 600:
-        print "%s has stale data." % fn
+        print("%s has stale data." % fn)
         sys.exit(3)
-    return float(value.strip())
+    v = value.strip()
+    if v.find("0x") == 0 :
+        v = int(v, 16)
+    return float(v)
 
 
 class RRD(nagiosplugin.Resource):
@@ -35,33 +38,42 @@ class RRD(nagiosplugin.Resource):
         self.module = args.module
         self.only = args.only
         self.ignore = args.ignore
-        self.rrdpath = os.path.join(args.datadir, args.domain)
+        domain = args.domain
+        if not domain:
+           domain = re.sub(r'^[^\.]+\.', '', args.hostname)
+        self.rrdpath = os.path.join(args.datadir, domain)
+
 
     def probe(self):
         myglob = os.path.join(
             self.rrdpath,
-            '%s-%s-%s-g.rrd' % (self.hostname, self.module, self.only)
+            '%s-%s-%s-*.rrd' % (self.hostname, self.module, self.only)
             )
         logging.info('checking %s', myglob)
         myfiles = glob.glob(myglob)
         myfiles.sort()
         for fn in myfiles:
-            component_pattern = re.compile(r"^.+/%s-%s-(.+)-[a-z]\.rrd$" % (self.hostname, self.module))
+            component_pattern = re.compile(r"^.+/%s-%s-(.+)-([a-z])\.rrd$" % (self.hostname, self.module))
             mo = component_pattern.match(fn)
             if mo:
                 component = mo.group(1)
+                typedata = mo.group(2)
+                # print('typedata: %s' % typedata)
                 if component not in self.ignore:
                     component = component.replace('_', '/')
                     # note that we check ignore again in case it was specified with /s
                     if component not in self.ignore:
                         logging.info('reading %s', component)
+                        data = readRRDData(fn)
+                        if typedata == 'd':
+                            data = data / (1024 * 1024) / 127 * 100
                         yield nagiosplugin.Metric(component, readRRDData(fn), min=0, context='munin')
 
 
 @nagiosplugin.guarded
 def main():
     argp = argparse.ArgumentParser(description=__doc__)
-    argp.add_argument('-d', '--domain', required=True, default='')
+    argp.add_argument('-d', '--domain', default='')
     argp.add_argument('-H', '--hostname', required=True, default='')
     argp.add_argument('-M', '--module', required=True, default='')
     argp.add_argument('-o', '--only', default='*',
