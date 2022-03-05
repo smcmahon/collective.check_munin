@@ -23,7 +23,10 @@ def readRRDData(fn):
     if time.time() - float(mtime) > 600:
         print("%s has stale data." % fn)
         sys.exit(3)
-    return float(value.strip())
+    v = value.strip()
+    if v.find("0x") == 0 :
+        v = int(v, 16)
+    return float(v)
 
 
 class RRD(nagiosplugin.Resource):
